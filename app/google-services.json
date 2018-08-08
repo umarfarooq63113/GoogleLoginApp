@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "70240093196",
+    "firebase_url": "https://stunning-vertex-212616.firebaseio.com",
+    "project_id": "stunning-vertex-212616",
+    "storage_bucket": "stunning-vertex-212616.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70240093196:android:3320e00e43bdec0d",
+        "android_client_info": {
+          "package_name": "com.example.umar.googleloginapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70240093196-q2m6pmiv48bi8u7jac74f5hdgqc8d3r1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.umar.googleloginapp",
+            "certificate_hash": "f844b9342deec1581e415550516d471d156b0137"
+          }
+        },
+        {
+          "client_id": "70240093196-1lg2a7ocne68rm0jk2v1k5jcrtg8plim.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0qyvAjRxZ2hVKN7kvb-DtltpEFi9_mqU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70240093196-1lg2a7ocne68rm0jk2v1k5jcrtg8plim.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
