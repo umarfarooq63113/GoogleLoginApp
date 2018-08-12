@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,10 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.ui.AccountKitActivity;
+import com.facebook.accountkit.ui.AccountKitConfiguration;
+import com.facebook.accountkit.ui.LoginType;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -36,13 +41,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class GoogleSignInActivity extends BaseActivity implements
         View.OnClickListener {
 
-
-
-
-    LoginButton fbButton;
-    CallbackManager callbackManager;
-
-
     private static final int RC_SIGN_IN = 9001;
 
     // [START declare_auth]
@@ -51,25 +49,21 @@ public class GoogleSignInActivity extends BaseActivity implements
 
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
-    private TextView mDetailTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_signin);
 
-//facebook login button
-        fbButton=(LoginButton) findViewById(R.id.fb_login_button);
-
-
         // Views
         mStatusTextView = findViewById(R.id.status);
-        mDetailTextView = findViewById(R.id.detail);
+
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
+
 
         // [START config_signin]
         // Configure Google Sign In
@@ -81,58 +75,12 @@ public class GoogleSignInActivity extends BaseActivity implements
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
-
-        callbackManager = CallbackManager.Factory.create();
-
-        fbButton.registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Toast.makeText(GoogleSignInActivity.this, "Login successfully\n"+
-                                        loginResult.getAccessToken().getUserId()+"\n"+
-                                        loginResult.getAccessToken().getToken(),
-                                Toast.LENGTH_SHORT).show();
-
-
-
-
-                        mStatusTextView.setText(getString(R.string.google_status_fmt,
-                                "Login successfully "+
-                                loginResult.getAccessToken().getUserId()));
-                        mDetailTextView.setText(getString(R.string.firebase_status_fmt,
-                                loginResult.getAccessToken().getToken()));
-
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
-
-
-
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
     }
 
-
-
-    /*@Override
-    protected void onActivityResult(int resultCode, Intent data) {
-        callbackManager.onActivityResult(resultCode,data);
-        //super.onActivityReenter(resultCode, data);
-    }*/
 
     // [START on_start_check_user]
     @Override
@@ -163,6 +111,8 @@ public class GoogleSignInActivity extends BaseActivity implements
                 // [END_EXCLUDE]
             }
         }
+
+
     }
     // [END onactivityresult]
 
@@ -216,34 +166,17 @@ public class GoogleSignInActivity extends BaseActivity implements
                 });
     }
 
-    private void revokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
 
-        // Google revoke access
-        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });
-    }
 
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
             mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
         } else {
             mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
 
@@ -254,8 +187,6 @@ public class GoogleSignInActivity extends BaseActivity implements
             signIn();
         } else if (i == R.id.sign_out_button) {
             signOut();
-        } else if (i == R.id.disconnect_button) {
-            revokeAccess();
         }
     }
 }
